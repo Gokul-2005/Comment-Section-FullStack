@@ -1,0 +1,68 @@
+<link rel="stylesheet" href="CSS/index.css">
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<body>
+<center><div id="commentsBody">
+
+<% for(let i = 0 ; i<obj.data[0].comments.length ; i++){ %>
+    <div commentID = "<%= obj.data[0].comments[i].id %>" class="mainComment">
+        <div id="voteDiv">
+            <button onclick="increseCountForComment(this)" class="voteButton" id="upvote"><img  src="Assets/icon-plus.svg" /></button>
+            <div id="voteCount"> <%= obj.data[0].comments[i].score %> </div>
+            <button onclick="decreaseCountForComment(this)" class="voteButton" id="downVote"><img src="Assets/icon-minus.svg" /></button>
+        </div>
+        <div id="commentBody">
+            <div id="mainCommentHeader"> 
+                <img id="userImg" src="<%= obj.data[0].comments[i].user.image.png %>" /> 
+                <h1 id="userName"><%= obj.data[0].comments[i].user.username %> &nbsp;&nbsp;&nbsp;<span><%= obj.data[0].comments[i].createdAt %></span></h1>
+                <button id="replyButton"  onclick=showNewReply(this)> <img src="Assets/icon-reply.svg" /> &nbsp; Reply </button>
+            </div>
+            <div id="mainCommentBody"><%= obj.data[0].comments[i].content %></div>
+        </div>
+    </div>
+    <div id="NewReply">
+        <img id="imgForSendComment" src="<%= obj.data[0].currentUser.image.png %>" />
+        <textarea placeholder="Add a comment…" id="userCommentText"></textarea>
+        <button onclick="addNewReply(this)" id="sendButton">Reply</button>
+    </div>
+<% if(obj.data[0].comments[i].replies != []) { %>
+    <div id="totalReplyBox">
+    <% for(let j = 0 ; j<obj.data[0].comments[i].replies.length ; j++){%>
+    <div commentID = "<%= obj.data[0].comments[i].id %>" replyID = "<%= obj.data[0].comments[i].replies[j].id %>"  id="mainReply">
+        <div id="voteDiv">
+            <button onclick="increaseCountForReply(this)" class="voteButton" id="upvote"><img  src="Assets/icon-plus.svg" /></button>
+            <div id="voteCount"> <%= obj.data[0].comments[i].replies[j].score %> </div>
+            <button onclick="decreaseCountForReply(this)" class="voteButton" id="downVote"><img src="Assets/icon-minus.svg" /></button>
+        </div>
+        <div id="ReplyBody">
+            <div id="mainReplyHeader"> 
+                <img id="userImg" src="<%= obj.data[0].comments[i].replies[j].user.image.png %>" /> 
+                <h1 id="userName"><%= obj.data[0].comments[i].replies[j].user.username %> &nbsp; <% if(obj.data[0].currentUser.username===obj.data[0].comments[i].replies[j].user.username) {%> <button id="youDiv">you</button> <%}%> &nbsp;&nbsp;<span><%= obj.data[0].comments[i].replies[j].createdAt %></span></h1>
+                <% if(obj.data[0].currentUser.username===obj.data[0].comments[i].replies[j].user.username) {%> <button onclick="deleteReply(this)" id="deleteButton"> <img src="Assets/icon-delete.svg" /> Delete</button><button onclick="showEditReply(this)" id="editButton"><img src="Assets/icon-edit.svg" />Edit</button> <%}
+                else{%> <button onclick="showNestedReply(this)" id="replyButton"> <img src="Assets/icon-reply.svg" /> &nbsp; Reply </button> <% }%>   
+            </div>
+            <div id="mainReplyBody"><atTag>@<%= obj.data[0].comments[i].replies[j].replyingTo %></atTag> &nbsp; <%= obj.data[0].comments[i].replies[j].content %></div>
+        </div>
+    </div>
+    <div id="NewReply">
+        <img id="imgForSendComment" src="<%= obj.data[0].currentUser.image.png %>" />
+        <textarea placeholder="Add a comment…" id="userCommentText"></textarea>
+        <% if(obj.data[0].currentUser.username===obj.data[0].comments[i].replies[j].user.username) {%>
+        <button onclick="saveNewReply(this)" id="sendButton">UPDATE</button>
+        <%}
+        else{%> <button onclick="saveNestedReply(this)" id="sendButton"> Reply </button> <% }%> 
+    </div>
+    <% }%>
+</div> 
+    <%} %>
+    <% } %>
+
+
+</div></center>
+<center><div id="userComment">
+
+<img id="imgForSendComment" src="<%= obj.data[0].currentUser.image.png %>" />
+<textarea placeholder="Add a comment…" id="userCommentTextt"></textarea>
+<button onclick="addComment()" id="sendButton">SEND</button>
+</div></center>
+</body>
+<script src="JS/index.js"></script>
